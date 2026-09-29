@@ -24,125 +24,65 @@ Semua akun menggunakan password default: `password123`
 | `interviewer3@campusfair.id` | Pewawancara |
 | `interviewer4@campusfair.id` | Pewawancara |
 
-> ⚠️ **Penting:** Ganti password default sebelum digunakan di server produksi!
+> ⚠️ **Penting:** Segera ganti password default sebelum digunakan!
 
 ---
 
-## ⚙️ Tech Stack
+## 🚀 Panduan Deployment ke aaPanel (High-Level)
 
-- **Backend:** PHP Native (tanpa framework)
-- **Database:** MariaDB / MySQL
-- **Frontend:** Bootstrap 5 + Custom CSS
-- **Font:** Plus Jakarta Sans (Google Fonts, via CDN)
+Tutorial ini khusus dibuat agar sangat mudah dipahami, langkah demi langkah, untuk mendeploy website ini ke server Linux yang menggunakan **aaPanel**.
 
----
+### Tahap 1: Persiapan Server aaPanel
+1. Login ke dashboard aaPanel Anda.
+2. Buka menu **App Store**.
+3. Pastikan Anda sudah menginstall:
+   - Web Server (Nginx atau Apache)
+   - Database (MySQL atau MariaDB)
+   - **PHP 8.4** (Website ini menggunakan PHP versi terbaru).
 
-## 🚀 Panduan Instalasi (Lokal)
+### Tahap 2: Membuat Website di aaPanel
+1. Masuk ke menu **Website** -> Klik tombol **Add site**.
+2. Masukkan **Domain** Anda (contoh: `campusfair.com`).
+3. Pada bagian **Database**, pilih `MySQL` (sistem aaPanel akan otomatis membuatkan *Database Name*, *Username*, dan *Password*). **Catat ketiga data ini baik-baik!**
+4. Pada opsi **PHP Version**, pastikan Anda memilih **PHP-84**.
+5. Klik **Submit**.
 
-### Prasyarat
-- PHP 8.0 atau lebih baru
-- MySQL / MariaDB
-- Ekstensi PHP: `pdo`, `pdo_mysql`
+### Tahap 3: Upload Source Code
+1. Klik area *Document Root* (nama folder) pada baris website yang baru saja dibuat. Anda akan dibawa ke **Files** manager aaPanel.
+2. Hapus file *default* seperti `index.html` dan `.user.ini` (jika ada).
+3. **Upload** seluruh file codingan dari repositori ini ke folder tersebut. 
+   *(Pastikan file `index.php` berada di luar, tidak masuk ke dalam sub-folder).*
 
-### Langkah-langkah
+### Tahap 4: Import Database
+1. Buka menu **Database** di kiri aaPanel.
+2. Cari nama database Anda di daftar, lalu klik tombol **phpMyAdmin**.
+3. Di dalam phpMyAdmin, klik nama database Anda di kolom sebelah kiri.
+4. Klik tab **Import** (di bagian atas) -> Pilih file `database/schema.sql` dari folder codingan -> Klik tombol **Go** atau **Import** di bagian bawah.
 
-**1. Clone repositori**
-```bash
-git clone https://github.com/USERNAME/management-campusfair.git
-cd management-campusfair
-```
+### Tahap 5: Menyambungkan Web ke Database
+1. Kembali ke menu **Files** manager di aaPanel.
+2. Buka folder `config/` dan edit file `database.php` (klik kanan -> Edit).
+3. Ubah bagian ini:
+   ```php
+   $dbname   = 'NAMA_DATABASE_DARI_AAPANEL';
+   $username = 'USER_DATABASE_DARI_AAPANEL';
+   $password = 'PASSWORD_DARI_AAPANEL';
+   ```
+   Ganti nilai-nilai tersebut dengan data yang Anda catat pada Tahap 2 tadi.
+4. Klik ikon Save (simpan).
 
-**2. Buat database dan impor schema**
-
-Buka terminal MySQL atau PHPMyAdmin, lalu jalankan:
-```bash
-mysql -u root -p < database/schema.sql
-```
-Perintah di atas akan membuat database `campusfair2027`, membuat semua tabel, dan menyisipkan 5 akun bawaan (seed data).
-
-**3. Sesuaikan konfigurasi database**
-
-Edit file `config/database.php` dan sesuaikan kredensial koneksi:
-```php
-$host     = 'localhost';
-$dbname   = 'campusfair2027';
-$username = 'root';          // Sesuaikan
-$password = '';               // Sesuaikan
-```
-
-**4. Jalankan server lokal**
-
-Gunakan PHP Built-in Server:
-```bash
-php -S localhost:8000
-```
-Atau jalankan skrip helper yang sudah disediakan:
-```bash
-# Linux / Mac
-chmod +x serve.sh
-./serve.sh
-
-# Windows
-serve.bat
-```
-
-**5. Buka di browser**
-
-Akses [http://localhost:8000](http://localhost:8000). Anda akan diarahkan ke halaman Login.
+**🎉 Selesai!** Website Anda sekarang sudah live dan tersambung ke database aaPanel. Silakan buka domain Anda di browser.
 
 ---
 
-## 🌐 Panduan Deploy ke VPS (aaPanel)
+## 📂 Struktur Folder Utama
 
-1. **Buat website** di aaPanel (misal: `campusfair.domain.com`).
-2. **Upload** semua file proyek ke document root (`/www/wwwroot/campusfair.domain.com/`).
-3. **Buat database** MySQL/MariaDB melalui aaPanel → Database → Add database.
-4. **Impor schema:** Buka phpMyAdmin, pilih database yang baru dibuat, lalu impor file `database/schema.sql`.
-5. **Edit** `config/database.php` sesuai kredensial database yang dibuat di aaPanel.
-6. Pastikan PHP versi 8.0+ aktif di website settings.
-
----
-
-## 📂 Struktur Folder
-
-```
-management-campusfair/
-├── assets/
-│   └── css/
-│       └── style.css          # Custom theme (Plus Jakarta Sans, pastel badges)
-├── auth/
-│   ├── login.php              # Halaman login
-│   └── logout.php             # Proses logout
-├── config/
-│   └── database.php           # Konfigurasi koneksi PDO
-├── database/
-│   └── schema.sql             # DDL tabel + seed data akun
-├── includes/
-│   ├── auth.php               # Helper autentikasi & otorisasi
-│   ├── header.php             # Template navbar & head HTML
-│   └── footer.php             # Template footer & script
-├── pendaftar/
-│   ├── index.php              # Tabel semua pendaftar (Fitur 1)
-│   ├── tambah.php             # Form input pendaftar baru
-│   ├── proses_tambah.php      # Proses simpan data pendaftar
-│   ├── detail.php             # Detail & update status pendaftar
-│   └── update_status.php      # Proses update status diterima/tidak
-├── wawancara/
-│   ├── index.php              # Daftar wawancara (Fitur 2)
-│   ├── assign.php             # Proses assign pewawancara
-│   ├── detail.php             # Detail & form komentar wawancara
-│   └── simpan_komentar.php    # Proses simpan komentar
-├── staff/
-│   └── index.php              # Daftar staff final (Fitur 3)
-├── index.php                  # Router utama (redirect sesuai role)
-├── serve.sh                   # Skrip jalankan server lokal (Linux/Mac)
-├── serve.bat                  # Skrip jalankan server lokal (Windows)
-├── prd.md                     # Product Requirements Document
-└── README.md                  # Dokumentasi ini
-```
-
----
-
-## 📄 Lisensi
-
-Proyek internal Campus Fair 2027. Hak cipta dilindungi.
+- `assets/` : File CSS dan kustomisasi tampilan.
+- `auth/` : Proses Login & Logout.
+- `config/` : Pengaturan koneksi Database.
+- `database/` : File `schema.sql` untuk diimpor ke database.
+- `includes/` : Komponen pendukung (Header, Footer, Session Auth).
+- `pendaftar/` : Modul Pendaftar (Fitur 1).
+- `wawancara/` : Modul Wawancara (Fitur 2).
+- `staff/` : Modul Staff Final (Fitur 3).
+- `index.php` : File utama yang mengarahkan user setelah login.
