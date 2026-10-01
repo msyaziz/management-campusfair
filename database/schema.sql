@@ -13,7 +13,7 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `nama` VARCHAR(255) NOT NULL,
-  `email` VARCHAR(255) NOT NULL UNIQUE,
+  `username` VARCHAR(255) NOT NULL UNIQUE,
   `password_hash` VARCHAR(255) NOT NULL,
   `role` ENUM('admin', 'pewawancara') NOT NULL DEFAULT 'pewawancara',
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -28,24 +28,24 @@ CREATE TABLE `pendaftar` (
   `no_whatsapp` VARCHAR(50) NOT NULL,
   `alasan_mendaftar` TEXT NOT NULL,
   `pilihan_1` ENUM(
-    'Humas',
-    'Acara',
-    'Konsumsi',
-    'Sponsorship',
-    'Perlengkapan',
-    'Keamanan',
-    'Publikasi, Dekorasi, dan Dokumentasi'
+    'Divisi Humas',
+    'Divisi Acara',
+    'Divisi Konsumsi',
+    'Divisi Sponsorship',
+    'Divisi Perlengkapan',
+    'Divisi Keamanan',
+    'Divisi Publikasi, Dekorasi, dan Dokumentasi'
   ) NOT NULL,
   `alasan_pilihan_1` TEXT NOT NULL,
   `pengalaman_pilihan_1` TEXT NOT NULL,
   `pilihan_2` ENUM(
-    'Humas',
-    'Acara',
-    'Konsumsi',
-    'Sponsorship',
-    'Perlengkapan',
-    'Keamanan',
-    'Publikasi, Dekorasi, dan Dokumentasi'
+    'Divisi Humas',
+    'Divisi Acara',
+    'Divisi Konsumsi',
+    'Divisi Sponsorship',
+    'Divisi Perlengkapan',
+    'Divisi Keamanan',
+    'Divisi Publikasi, Dekorasi, dan Dokumentasi'
   ) NOT NULL,
   `alasan_pilihan_2` TEXT NOT NULL,
   `pengalaman_pilihan_2` TEXT NOT NULL,
@@ -78,13 +78,13 @@ CREATE TABLE `seleksi` (
   `pendaftar_id` INT NOT NULL UNIQUE,
   `status_diterima` ENUM('pending', 'diterima', 'tidak_diterima') DEFAULT 'pending',
   `divisi_ditempatkan` ENUM(
-    'Humas',
-    'Acara',
-    'Konsumsi',
-    'Sponsorship',
-    'Perlengkapan',
-    'Keamanan',
-    'Publikasi, Dekorasi, dan Dokumentasi'
+    'Divisi Humas',
+    'Divisi Acara',
+    'Divisi Konsumsi',
+    'Divisi Sponsorship',
+    'Divisi Perlengkapan',
+    'Divisi Keamanan',
+    'Divisi Publikasi, Dekorasi, dan Dokumentasi'
   ) DEFAULT NULL,
   `decided_by` INT DEFAULT NULL,
   `decided_at` DATETIME DEFAULT NULL,
@@ -93,10 +93,10 @@ CREATE TABLE `seleksi` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Seed Data Akun Utama (Password default: password123)
--- Hash BCRYPT untuk 'password123': $2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi
-INSERT INTO `users` (`nama`, `email`, `password_hash`, `role`) VALUES
-('Admin Utama', 'admin@campusfair.id', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin'),
-('Pewawancara 1', 'interviewer1@campusfair.id', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'pewawancara'),
-('Pewawancara 2', 'interviewer2@campusfair.id', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'pewawancara'),
-('Pewawancara 3', 'interviewer3@campusfair.id', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'pewawancara'),
-('Pewawancara 4', 'interviewer4@campusfair.id', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'pewawancara');
+-- Hash BCRYPT untuk 'password123': $2y$10$dXqNEeHVMFwqp9TDwyjoDuhTxiBarrWElYrfOefudaRAPAyICdYVq
+INSERT INTO `users` (`nama`, `username`, `password_hash`, `role`) VALUES
+('Admin Utama', 'admin', '$2y$10$dXqNEeHVMFwqp9TDwyjoDuhTxiBarrWElYrfOefudaRAPAyICdYVq', 'admin'),
+('Pewawancara 1', 'pewawancara1', '$2y$10$dXqNEeHVMFwqp9TDwyjoDuhTxiBarrWElYrfOefudaRAPAyICdYVq', 'pewawancara'),
+('Pewawancara 2', 'pewawancara2', '$2y$10$dXqNEeHVMFwqp9TDwyjoDuhTxiBarrWElYrfOefudaRAPAyICdYVq', 'pewawancara'),
+('Pewawancara 3', 'pewawancara3', '$2y$10$dXqNEeHVMFwqp9TDwyjoDuhTxiBarrWElYrfOefudaRAPAyICdYVq', 'pewawancara'),
+('Pewawancara 4', 'pewawancara4', '$2y$10$dXqNEeHVMFwqp9TDwyjoDuhTxiBarrWElYrfOefudaRAPAyICdYVq', 'pewawancara');

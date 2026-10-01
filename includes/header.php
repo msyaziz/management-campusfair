@@ -10,6 +10,7 @@ $user = isset($_SESSION['user_id']) ? [
 <!DOCTYPE html>
 <html lang="id">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= isset($page_title) ? htmlspecialchars($page_title) . ' - ' : '' ?>Campus Fair 2027</title>
@@ -23,59 +24,56 @@ $user = isset($_SESSION['user_id']) ? [
 <body>
 
 <?php if ($user): ?>
-<nav class="navbar navbar-expand-lg navbar-custom sticky-top">
-    <div class="container">
-        <a class="navbar-brand d-flex align-items-center" href="/">
-            <div class="bg-warning text-dark p-2 rounded-circle me-2 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-                <i class="bi bi-award-fill"></i>
-            </div>
-            Campus Fair '27
-        </a>
-        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-4 me-auto mb-2 mb-lg-0 gap-1">
-                <?php if ($user['role'] === 'admin'): ?>
-                <li class="nav-item">
-                    <a class="nav-link px-3 rounded-pill <?= (isset($active_nav) && $active_nav === 'pendaftar') ? 'active bg-dark text-white' : 'text-muted fw-semibold' ?>" href="/pendaftar/index.php">
-                        Data Pendaftar
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link px-3 rounded-pill <?= (isset($active_nav) && $active_nav === 'wawancara') ? 'active bg-dark text-white' : 'text-muted fw-semibold' ?>" href="/wawancara/index.php">
-                        Wawancara
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link px-3 rounded-pill <?= (isset($active_nav) && $active_nav === 'staff') ? 'active bg-dark text-white' : 'text-muted fw-semibold' ?>" href="/staff/index.php">
-                        Staff Final
-                    </a>
-                </li>
-                <?php else: ?>
-                <li class="nav-item">
-                    <a class="nav-link px-3 rounded-pill <?= (isset($active_nav) && $active_nav === 'wawancara') ? 'active bg-dark text-white' : 'text-muted fw-semibold' ?>" href="/wawancara/index.php">
-                        Penugasan Wawancara Saya
-                    </a>
-                </li>
-                <?php endif; ?>
-            </ul>
+<div class="wrapper">
+    <!-- Sidebar -->
+    <aside class="sidebar-custom shadow-sm">
+        <div class="sidebar-brand d-flex align-items-center justify-content-center gap-2">
+            <span>CAMPUS FAIR '27</span>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <?php if ($user['role'] === 'admin'): ?>
+            <a href="/pendaftar/index.php" class="nav-link <?= (isset($active_nav) && $active_nav === 'pendaftar') ? 'active' : '' ?>">
+                <i class="bi bi-people"></i> Pendaftar
+            </a>
+            <a href="/wawancara/index.php" class="nav-link <?= (isset($active_nav) && $active_nav === 'wawancara') ? 'active' : '' ?>">
+                <i class="bi bi-mic"></i> Wawancara
+            </a>
+            <a href="/staff/index.php" class="nav-link <?= (isset($active_nav) && $active_nav === 'staff') ? 'active' : '' ?>">
+                <i class="bi bi-diagram-3"></i> Staff Final
+            </a>
+            <?php else: ?>
+            <a href="/wawancara/index.php" class="nav-link <?= (isset($active_nav) && $active_nav === 'wawancara') ? 'active' : '' ?>">
+                <i class="bi bi-mic"></i> Penugasan Wawancara
+            </a>
+            <?php endif; ?>
+        </nav>
+        
+        <div class="sidebar-footer">
             <div class="d-flex align-items-center gap-3">
-                <div class="text-end d-none d-sm-block">
-                    <div class="fw-bold text-dark fs-7"><?= htmlspecialchars($user['nama']) ?></div>
-                    <div class="text-muted small text-capitalize" style="font-size: 0.75rem;"><?= htmlspecialchars($user['role']) ?></div>
-                </div>
-                <div class="d-flex align-items-center justify-content-center bg-light rounded-circle text-primary fw-bold" style="width: 40px; height: 40px;">
+                <div class="d-flex align-items-center justify-content-center bg-light rounded-circle text-primary fw-bold" style="width: 40px; height: 40px; flex-shrink: 0;">
                     <?= strtoupper(substr($user['nama'], 0, 1)) ?>
                 </div>
-                <a href="/auth/logout.php" class="btn btn-light rounded-circle text-muted" title="Logout" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                <div class="flex-grow-1 overflow-hidden">
+                    <div class="fw-bold text-dark text-truncate" style="font-size: 0.85rem;"><?= htmlspecialchars($user['nama']) ?></div>
+                    <div class="text-muted small text-capitalize" style="font-size: 0.75rem;"><?= htmlspecialchars($user['role']) ?></div>
+                </div>
+                <a href="/auth/logout.php" class="text-muted p-2 hover-shadow rounded bg-light" title="Logout">
                     <i class="bi bi-box-arrow-right"></i>
                 </a>
             </div>
         </div>
-    </div>
-</nav>
-<?php endif; ?>
+    </aside>
 
-<main class="py-4">
-    <div class="container">
+    <main class="main-content d-flex flex-column">
+        <div class="d-md-none mb-3 d-flex align-items-center gap-2">
+            <button class="btn btn-sm btn-outline-dark" id="sidebarToggle">
+                <i class="bi bi-list fs-4"></i>
+            </button>
+            <span class="fw-bold font-archivo">CAMPUS FAIR '27</span>
+        </div>
+        <div class="container-fluid flex-grow-1">
+<?php else: ?>
+<main class="py-4 flex-grow-1 d-flex flex-column" style="background: linear-gradient(180deg, #DCEBFD 0%, #F5FAFF 100%);">
+    <div class="container flex-grow-1">
+<?php endif; ?>

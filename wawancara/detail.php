@@ -56,9 +56,9 @@ require_once __DIR__ . '/../includes/header.php';
         <?php endif; ?>
 
         <!-- Form Input Hasil Wawancara (Halaman ini tempat pewawancara bekerja) -->
-        <div class="card card-custom p-4 mb-4 border-2 border-warning">
+        <div class="card card-custom p-4 mb-4 border-2 border-dark">
             <h5 class="fw-bold border-bottom pb-2 mb-3 text-dark">
-                <i class="bi bi-pencil-square me-2 text-warning"></i>Input Hasil Wawancara
+                <i class="bi bi-pencil-square me-2 text-dark"></i>Input Hasil Wawancara
             </h5>
             <form action="/wawancara/simpan_komentar.php" method="POST">
                 <input type="hidden" name="pendaftar_id" value="<?= $pendaftar['id'] ?>">
@@ -77,10 +77,10 @@ require_once __DIR__ . '/../includes/header.php';
                             <label class="btn btn-outline-secondary btn-sm rounded-start-pill px-3" for="status_belum">Tandai Belum Selesai</label>
 
                             <input type="radio" class="btn-check" name="status_wawancara" id="status_selesai" value="selesai" <?= $pendaftar['status_wawancara'] === 'selesai' ? 'checked' : '' ?>>
-                            <label class="btn btn-outline-warning text-dark fw-bold btn-sm rounded-end-pill px-3" for="status_selesai">Tandai Selesai Wawancara</label>
+                            <label class="btn btn-outline-dark fw-bold btn-sm rounded-end-pill px-3" for="status_selesai">Tandai Selesai Wawancara</label>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-pill-dark px-4">
+                    <button type="submit" class="btn btn-primary-orange px-4">
                         <i class="bi bi-save me-1"></i> Simpan Catatan Wawancara
                     </button>
                 </div>
@@ -89,12 +89,12 @@ require_once __DIR__ . '/../includes/header.php';
 
         <!-- Read-Only Applicant Information -->
         <div class="card card-custom p-4 mb-4">
-            <h5 class="fw-bold border-bottom pb-2 mb-3"><i class="bi bi-person-lines-fill me-2 text-warning"></i>Data Jawaban Pendaftar (Read-Only)</h5>
+            <h5 class="fw-bold border-bottom pb-2 mb-3"><i class="bi bi-person-lines-fill me-2 text-dark"></i>Data Jawaban Pendaftar (Read-Only)</h5>
             
             <div class="row g-3 mb-3">
                 <div class="col-md-6">
                     <span class="text-muted small d-block">No. WhatsApp:</span>
-                    <strong class="text-dark"><i class="bi bi-whatsapp text-success me-1"></i><?= htmlspecialchars($pendaftar['no_whatsapp']) ?></strong>
+                    <strong class="text-dark"><i class="bi bi-whatsapp me-1"></i><?= htmlspecialchars($pendaftar['no_whatsapp']) ?></strong>
                 </div>
                 <div class="col-md-6">
                     <span class="text-muted small d-block">Tautan Berkas:</span>
@@ -113,7 +113,7 @@ require_once __DIR__ . '/../includes/header.php';
             <div class="row g-3 mb-4">
                 <div class="col-md-6">
                     <div class="p-3 border rounded-3 h-100">
-                        <h6 class="fw-bold text-primary">Pilihan 1: <?= htmlspecialchars($pendaftar['pilihan_1']) ?></h6>
+                        <h6 class="fw-bold text-dark">Pilihan 1: <?= htmlspecialchars($pendaftar['pilihan_1']) ?></h6>
                         <hr class="my-2">
                         <strong class="small text-muted">Alasan:</strong>
                         <p class="mb-2 small"><?= nl2br(htmlspecialchars($pendaftar['alasan_pilihan_1'])) ?></p>

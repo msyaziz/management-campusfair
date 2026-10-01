@@ -3,10 +3,10 @@
  * Konfigurasi Koneksi Database MariaDB/MySQL menggunakan PDO
  */
 
-$host     = 'localhost';
-$dbname   = 'NAMA_DATABASE_DARI_AAPANEL';
-$username = 'USER_DATABASE_DARI_AAPANEL';
-$password = 'PASSWORD_DARI_AAPANEL';
+$host     = '127.0.0.1';
+$dbname   = 'campusfair';
+$username = 'admin_db';
+$password = 'password1234';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password, [

@@ -45,7 +45,7 @@ require_once __DIR__ . '/../includes/header.php';
                 <?php else: ?>
                     <span class="badge badge-purple fs-6 mb-1">Status: Pending</span>
                 <?php endif; ?>
-                <div class="small text-muted"><i class="bi bi-whatsapp text-success me-1"></i><?= htmlspecialchars($pendaftar['no_whatsapp']) ?></div>
+                <div class="small text-muted"><i class="bi bi-whatsapp me-1"></i><?= htmlspecialchars($pendaftar['no_whatsapp']) ?></div>
             </div>
         </div>
 
@@ -53,95 +53,95 @@ require_once __DIR__ . '/../includes/header.php';
         <div class="row g-3 mb-4">
             <div class="col-md-4">
                 <div class="card card-custom p-3 text-center">
-                    <span class="text-muted small">Skor Komitmen</span>
-                    <h2 class="fw-bold text-dark my-1"><?= $pendaftar['skor_komitmen'] ?> <span class="fs-6 text-muted">/10</span></h2>
+                    <span class="text-dark fw-bold small">Skor Komitmen</span>
+                    <h2 class="fw-bold text-dark my-1"><?= $pendaftar['skor_komitmen'] ?> <span class="fs-6 text-dark fw-normal">/10</span></h2>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card card-custom p-3 text-center">
-                    <span class="text-muted small">Skor Prioritas</span>
-                    <h2 class="fw-bold text-dark my-1"><?= $pendaftar['skor_prioritas'] ?> <span class="fs-6 text-muted">/10</span></h2>
+                    <span class="text-dark fw-bold small">Skor Prioritas</span>
+                    <h2 class="fw-bold text-dark my-1"><?= $pendaftar['skor_prioritas'] ?> <span class="fs-6 text-dark fw-normal">/10</span></h2>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card card-custom p-3 text-center">
-                    <span class="text-muted small">Skor Keyakinan</span>
-                    <h2 class="fw-bold text-dark my-1"><?= $pendaftar['skor_keyakinan'] ?> <span class="fs-6 text-muted">/10</span></h2>
+                    <span class="text-dark fw-bold small">Skor Keyakinan</span>
+                    <h2 class="fw-bold text-dark my-1"><?= $pendaftar['skor_keyakinan'] ?> <span class="fs-6 text-dark fw-normal">/10</span></h2>
                 </div>
             </div>
         </div>
 
         <div class="card card-custom p-4 mb-4">
-            <h5 class="fw-bold border-bottom pb-2 mb-3"><i class="bi bi-folder2-open me-2 text-warning"></i>Tautan Berkas Pendaftar</h5>
+            <h5 class="fw-bold border-bottom pb-2 mb-3 text-dark"><i class="bi bi-folder2-open me-2 text-dark"></i>Tautan Berkas Pendaftar</h5>
             <div class="d-flex gap-3">
-                <a href="<?= htmlspecialchars($pendaftar['cv_link']) ?>" target="_blank" class="btn btn-pill-dark btn-sm">
-                    <i class="bi bi-file-earmark-pdf me-1"></i> Buka Link CV
+                <a href="<?= htmlspecialchars($pendaftar['cv_link']) ?>" target="_blank" class="btn btn-dark text-white fw-bold px-3 py-2 rounded-3">
+                    <i class="bi bi-file-earmark-pdf-fill me-1"></i> Buka Link CV
                 </a>
                 <?php if ($pendaftar['portofolio_link']): ?>
-                    <a href="<?= htmlspecialchars($pendaftar['portofolio_link']) ?>" target="_blank" class="btn btn-pill-outline btn-sm">
-                        <i class="bi bi-briefcase me-1"></i> Buka Portofolio
+                    <a href="<?= htmlspecialchars($pendaftar['portofolio_link']) ?>" target="_blank" class="btn btn-dark text-white fw-bold px-3 py-2 rounded-3">
+                        <i class="bi bi-briefcase-fill me-1"></i> Buka Portofolio
                     </a>
                 <?php else: ?>
-                    <span class="text-muted small align-self-center"><em>Portofolio tidak dilampirkan</em></span>
+                    <span class="text-dark fw-bold small align-self-center"><em>Portofolio tidak dilampirkan</em></span>
                 <?php endif; ?>
             </div>
         </div>
 
         <!-- Section 2: Detail Jawaban Form -->
         <div class="card card-custom p-4 mb-4">
-            <h5 class="fw-bold border-bottom pb-2 mb-3"><i class="bi bi-card-text me-2 text-warning"></i>Detail Jawaban & Motivasi</h5>
+            <h5 class="fw-bold border-bottom pb-2 mb-3 text-dark"><i class="bi bi-card-text me-2 text-dark"></i>Detail Jawaban & Motivasi</h5>
             
             <div class="mb-4">
-                <label class="fw-semibold text-muted small">Alasan Mendaftar Staff CF 2027:</label>
-                <div class="p-3 bg-light rounded-3 text-dark mt-1"><?= nl2br(htmlspecialchars($pendaftar['alasan_mendaftar'])) ?></div>
+                <label class="fw-bold text-dark small">Alasan Mendaftar Staff CF 2027:</label>
+                <div class="p-3 bg-light rounded-3 text-dark fw-semibold mt-1"><?= nl2br(htmlspecialchars($pendaftar['alasan_mendaftar'])) ?></div>
             </div>
 
             <div class="row g-3 mb-4">
                 <div class="col-md-6">
-                    <div class="p-3 border rounded-3 h-100">
-                        <h6 class="fw-bold text-primary">Pilihan 1: <?= htmlspecialchars($pendaftar['pilihan_1']) ?></h6>
+                    <div class="p-3 border border-dark rounded-3 h-100">
+                        <h6 class="fw-bold text-dark">Pilihan 1: <?= htmlspecialchars($pendaftar['pilihan_1']) ?></h6>
                         <hr class="my-2">
                         <div class="mb-2">
-                            <strong class="small text-muted">Alasan:</strong>
-                            <p class="mb-2 small"><?= nl2br(htmlspecialchars($pendaftar['alasan_pilihan_1'])) ?></p>
+                            <strong class="small text-dark fw-bold">Alasan:</strong>
+                            <p class="mb-2 small text-dark"><?= nl2br(htmlspecialchars($pendaftar['alasan_pilihan_1'])) ?></p>
                         </div>
                         <div>
-                            <strong class="small text-muted">Pengalaman:</strong>
-                            <p class="mb-0 small"><?= nl2br(htmlspecialchars($pendaftar['pengalaman_pilihan_1'])) ?></p>
+                            <strong class="small text-dark fw-bold">Pengalaman:</strong>
+                            <p class="mb-0 small text-dark"><?= nl2br(htmlspecialchars($pendaftar['pengalaman_pilihan_1'])) ?></p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="p-3 border rounded-3 h-100">
-                        <h6 class="fw-bold text-secondary">Pilihan 2: <?= htmlspecialchars($pendaftar['pilihan_2']) ?></h6>
+                    <div class="p-3 border border-dark rounded-3 h-100">
+                        <h6 class="fw-bold text-dark">Pilihan 2: <?= htmlspecialchars($pendaftar['pilihan_2']) ?></h6>
                         <hr class="my-2">
                         <div class="mb-2">
-                            <strong class="small text-muted">Alasan:</strong>
-                            <p class="mb-2 small"><?= nl2br(htmlspecialchars($pendaftar['alasan_pilihan_2'])) ?></p>
+                            <strong class="small text-dark fw-bold">Alasan:</strong>
+                            <p class="mb-2 small text-dark"><?= nl2br(htmlspecialchars($pendaftar['alasan_pilihan_2'])) ?></p>
                         </div>
                         <div>
-                            <strong class="small text-muted">Pengalaman:</strong>
-                            <p class="mb-0 small"><?= nl2br(htmlspecialchars($pendaftar['pengalaman_pilihan_2'])) ?></p>
+                            <strong class="small text-dark fw-bold">Pengalaman:</strong>
+                            <p class="mb-0 small text-dark"><?= nl2br(htmlspecialchars($pendaftar['pengalaman_pilihan_2'])) ?></p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div>
-                <label class="fw-semibold text-muted small">Kesibukan Bulan Okt - Jan:</label>
-                <div class="p-3 bg-light rounded-3 text-dark mt-1"><?= nl2br(htmlspecialchars($pendaftar['kesibukan_okt_jan'])) ?></div>
+                <label class="fw-bold text-dark small">Kesibukan Bulan Okt - Jan:</label>
+                <div class="p-3 bg-light rounded-3 text-dark fw-semibold mt-1"><?= nl2br(htmlspecialchars($pendaftar['kesibukan_okt_jan'])) ?></div>
             </div>
         </div>
 
         <!-- Section 3: Catatan Hasil Wawancara -->
         <div class="card card-custom p-4 mb-4">
-            <h5 class="fw-bold border-bottom pb-2 mb-3"><i class="bi bi-chat-left-quote me-2 text-warning"></i>Hasil Wawancara</h5>
+            <h5 class="fw-bold border-bottom pb-2 mb-3 text-dark"><i class="bi bi-chat-left-quote me-2 text-dark"></i>Hasil Wawancara</h5>
             <div class="mb-3">
-                <span class="fw-semibold text-muted small">Pewawancara:</span>
+                <span class="fw-bold text-dark small">Pewawancara:</span>
                 <span class="ms-2 fw-bold text-dark"><?= $pendaftar['nama_pewawancara'] ? htmlspecialchars($pendaftar['nama_pewawancara']) : 'Belum di-assign' ?></span>
             </div>
             <div class="mb-3">
-                <span class="fw-semibold text-muted small">Status Wawancara:</span>
+                <span class="fw-bold text-dark small">Status Wawancara:</span>
                 <?php if ($pendaftar['status_wawancara'] === 'selesai'): ?>
                     <span class="badge badge-yellow ms-2">Sudah Wawancara</span>
                 <?php else: ?>
@@ -149,13 +149,13 @@ require_once __DIR__ . '/../includes/header.php';
                 <?php endif; ?>
             </div>
             <div>
-                <label class="fw-semibold text-muted small">Komentar Pewawancara:</label>
-                <div class="p-3 bg-light border-start border-4 border-warning rounded-3 mt-1">
+                <label class="fw-bold text-dark small">Komentar Pewawancara:</label>
+                <div class="p-3 bg-light border-start border-4 border-dark rounded-3 mt-1 text-dark">
                     <?php if ($pendaftar['komentar']): ?>
                         <?= nl2br(htmlspecialchars($pendaftar['komentar'])) ?>
-                        <div class="text-muted small mt-2 fs-7">Diperbarui: <?= htmlspecialchars($pendaftar['komentar_updated_at']) ?></div>
+                        <div class="text-dark small mt-2 fs-7 fw-bold">Diperbarui: <?= htmlspecialchars($pendaftar['komentar_updated_at']) ?></div>
                     <?php else: ?>
-                        <em class="text-muted">Belum ada komentar wawancara.</em>
+                        <em class="text-dark">Belum ada komentar wawancara.</em>
                     <?php endif; ?>
                 </div>
             </div>

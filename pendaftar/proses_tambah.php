@@ -33,6 +33,19 @@ try {
     if (empty($nama_lengkap) || empty($pilihan_1) || empty($pilihan_2) || empty($cv_link)) {
         throw new Exception("Field wajib belum terisi dengan benar!");
     }
+    
+    $valid_divisi = [
+        'Divisi Humas',
+        'Divisi Acara',
+        'Divisi Konsumsi',
+        'Divisi Sponsorship',
+        'Divisi Perlengkapan',
+        'Divisi Keamanan',
+        'Divisi Publikasi, Dekorasi, dan Dokumentasi'
+    ];
+    if (!in_array($pilihan_1, $valid_divisi) || !in_array($pilihan_2, $valid_divisi)) {
+        throw new Exception("Pilihan divisi tidak valid. Silakan pilih ulang.");
+    }
 
     $stmt = $pdo->prepare("
         INSERT INTO pendaftar (

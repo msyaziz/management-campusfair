@@ -36,9 +36,9 @@ function current_user() {
         return null;
     }
     return [
-        'id'    => $_SESSION['user_id'],
-        'nama'  => $_SESSION['nama'],
-        'email' => $_SESSION['email'],
-        'role'  => $_SESSION['role']
+        'id'       => $_SESSION['user_id'],
+        'nama'     => $_SESSION['nama'],
+        'username' => $_SESSION['username'],
+        'role'     => $_SESSION['role']
     ];
 }

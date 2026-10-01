@@ -4,13 +4,13 @@ require_login();
 require_once __DIR__ . '/../config/database.php';
 
 $divisi_list = [
-    'Humas',
-    'Acara',
-    'Konsumsi',
-    'Sponsorship',
-    'Perlengkapan',
-    'Keamanan',
-    'Publikasi, Dekorasi, dan Dokumentasi'
+    'Divisi Humas',
+    'Divisi Acara',
+    'Divisi Konsumsi',
+    'Divisi Sponsorship',
+    'Divisi Perlengkapan',
+    'Divisi Keamanan',
+    'Divisi Publikasi, Dekorasi, dan Dokumentasi'
 ];
 
 // Fetch accepted applicants
@@ -46,7 +46,7 @@ require_once __DIR__ . '/../includes/header.php';
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-        <h2 class="fw-bold mb-1">Daftar Final Staff CF 2027</h2>
+        <h2 class="fw-bold mb-1 font-archivo"><span class="neo-highlight">Daftar Final Staff CF 2027</span></h2>
         <p class="text-muted small mb-0">Halaman ini otomatis terisi saat status pendaftar diubah menjadi "Diterima" dan divisi ditempatkan.</p>
     </div>
     <span class="badge badge-green fs-6"><i class="bi bi-people-fill me-1"></i>Total Staff Diterima: <?= count($raw_accepted) ?></span>
@@ -54,13 +54,18 @@ require_once __DIR__ . '/../includes/header.php';
 
 <!-- Tabs Divisi -->
 <ul class="nav nav-pills mb-4" id="divisiTab" role="tablist">
-    <?php foreach ($divisi_list as $idx => $div): ?>
+    <?php foreach ($divisi_list as $idx => $div): 
+        $slug = 'div-' . preg_replace('/[^a-z0-9]/', '', strtolower($div));
+        $target_id = 'pane-' . $slug;
+    ?>
         <li class="nav-item" role="presentation">
             <button class="nav-link <?= $idx === 0 ? 'active' : '' ?>" 
-                    id="tab-<?= $idx ?>" 
-                    data-bs-toggle="tab" 
-                    data-bs-target="#pane-<?= $idx ?>" 
-                    type="button" role="tab">
+                    id="tab-<?= $slug ?>" 
+                    data-bs-toggle="pill" 
+                    data-bs-target="#<?= $target_id ?>" 
+                    type="button" role="tab" 
+                    aria-controls="<?= $target_id ?>" 
+                    aria-selected="<?= $idx === 0 ? 'true' : 'false' ?>">
                 <?= htmlspecialchars($div) ?>
                 <span class="badge bg-light text-dark ms-1"><?= count($staff_by_divisi[$div]) ?></span>
             </button>
@@ -70,12 +75,20 @@ require_once __DIR__ . '/../includes/header.php';
 
 <!-- Tab Contents -->
 <div class="tab-content" id="divisiTabContent">
-    <?php foreach ($divisi_list as $idx => $div): ?>
-        <div class="tab-pane fade <?= $idx === 0 ? 'show active' : '' ?>" id="pane-<?= $idx ?>" role="tabpanel">
+    <?php foreach ($divisi_list as $idx => $div): 
+        $slug = 'div-' . preg_replace('/[^a-z0-9]/', '', strtolower($div));
+        $target_id = 'pane-' . $slug;
+    ?>
+        <div class="tab-pane fade <?= $idx === 0 ? 'show active' : '' ?>" id="<?= $target_id ?>" role="tabpanel" aria-labelledby="tab-<?= $slug ?>">
             <div class="card card-custom p-4">
-                <h5 class="fw-bold mb-3 border-bottom pb-2">
-                    <i class="bi bi-diagram-3-fill me-2 text-warning"></i>Divisi <?= htmlspecialchars($div) ?>
-                </h5>
+                <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                    <h5 class="fw-bold mb-0">
+                        <i class="bi bi-diagram-3-fill me-2 text-dark"></i><?= htmlspecialchars($div) ?>
+                    </h5>
+                    <button class="btn btn-outline-dark btn-sm rounded-3 fw-bold" onclick="alert('Kadiv <?= htmlspecialchars($div) ?>: [Belum ditentukan / Silakan atur di Pengaturan]')">
+                        <i class="bi bi-person-badge-fill me-1"></i> Kadiv
+                    </button>
+                </div>
                 
                 <?php if (empty($staff_by_divisi[$div])): ?>
                     <div class="text-center py-5 text-muted">
@@ -94,12 +107,12 @@ require_once __DIR__ . '/../includes/header.php';
                                     <p class="text-muted small mb-2"><?= htmlspecialchars($s['asal_kampus_jurusan']) ?></p>
                                     
                                     <div class="small text-secondary mb-3">
-                                        <i class="bi bi-whatsapp text-success me-1"></i><?= htmlspecialchars($s['no_whatsapp']) ?>
+                                        <i class="bi bi-whatsapp me-1"></i><?= htmlspecialchars($s['no_whatsapp']) ?>
                                     </div>
 
                                     <?php if ($s['komentar']): ?>
-                                        <div class="p-2 bg-light rounded-3 small text-muted mb-3 border-start border-3 border-warning">
-                                            <i class="bi bi-chat-quote me-1 text-warning"></i>
+                                        <div class="p-2 bg-light rounded-3 small text-muted mb-3 border-start border-3 border-dark">
+                                            <i class="bi bi-chat-quote me-1 text-dark"></i>
                                             "<?= htmlspecialchars(mb_strimwidth($s['komentar'], 0, 90, '...')) ?>"
                                         </div>
                                     <?php endif; ?>
@@ -121,5 +134,39 @@ require_once __DIR__ . '/../includes/header.php';
         </div>
     <?php endforeach; ?>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tabButtons = document.querySelectorAll('#divisiTab button[data-bs-toggle="pill"]');
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Remove active class from all tabs
+            tabButtons.forEach(btn => {
+                btn.classList.remove('active');
+                btn.setAttribute('aria-selected', 'false');
+            });
+            
+            // Add active class to clicked tab
+            this.classList.add('active');
+            this.setAttribute('aria-selected', 'true');
+            
+            // Hide all tab panes
+            const tabPanes = document.querySelectorAll('#divisiTabContent .tab-pane');
+            tabPanes.forEach(pane => {
+                pane.classList.remove('show', 'active');
+            });
+            
+            // Show targeted tab pane
+            const targetId = this.getAttribute('data-bs-target');
+            const targetPane = document.querySelector(targetId);
+            if (targetPane) {
+                targetPane.classList.add('show', 'active');
+            }
+        });
+    });
+});
+</script>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>

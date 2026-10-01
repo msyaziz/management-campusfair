@@ -16,13 +16,13 @@ Sistem web internal untuk mengelola proses seleksi calon Staff Campus Fair 2027 
 
 Semua akun menggunakan password default: `password123`
 
-| Email | Role |
+| Username | Role |
 |---|---|
-| `admin@campusfair.id` | Admin |
-| `interviewer1@campusfair.id` | Pewawancara |
-| `interviewer2@campusfair.id` | Pewawancara |
-| `interviewer3@campusfair.id` | Pewawancara |
-| `interviewer4@campusfair.id` | Pewawancara |
+| `admin` | Admin |
+| `pewawancara1` | Pewawancara |
+| `pewawancara2` | Pewawancara |
+| `pewawancara3` | Pewawancara |
+| `pewawancara4` | Pewawancara |
 
 > ⚠️ **Penting:** Segera ganti password default sebelum digunakan!
 
