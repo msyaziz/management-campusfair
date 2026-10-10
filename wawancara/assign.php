@@ -27,5 +27,12 @@ $stmt->execute([
     'pendaftar_id'   => $pendaftar_id
 ]);
 
-header("Location: /wawancara/index.php?msg=assigned");
+$return_qs = $_POST['return_qs'] ?? '';
+
+if (!empty($return_qs)) {
+    header("Location: /wawancara/index.php?msg=assigned&" . $return_qs);
+} else {
+    $page = (int) ($_POST['page'] ?? 1);
+    header("Location: /wawancara/index.php?msg=assigned&page=" . $page);
+}
 exit;

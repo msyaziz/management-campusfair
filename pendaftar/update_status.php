@@ -33,6 +33,12 @@ $stmt->execute([
     'pendaftar_id'       => $pendaftar_id
 ]);
 
-header("Location: /pendaftar/index.php?msg=updated");
-exit;
+$return_qs = $_REQUEST['return_qs'] ?? '';
 
+if (!empty($return_qs)) {
+    header("Location: /pendaftar/index.php?msg=updated&" . $return_qs);
+} else {
+    $page = (int) ($_REQUEST['page'] ?? 1);
+    header("Location: /pendaftar/index.php?msg=updated&page=" . $page);
+}
+exit;

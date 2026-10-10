@@ -411,3 +411,10 @@ textarea.form-control:focus {
     width: 50%;
   }
 }
+
+/* Staff Final Table — garis hitam solid */
+.staff-table,
+.staff-table th,
+.staff-table td {
+  border-color: #000 !important;
+}

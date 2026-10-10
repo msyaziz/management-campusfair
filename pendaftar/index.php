@@ -90,6 +90,14 @@ $stmtStats = $pdo->query("
 ");
 $stats = $stmtStats->fetch();
 
+$query_params = [
+    'search' => $search,
+    'status_wawancara' => $status_wawancara,
+    'status_diterima' => $status_diterima,
+    'page' => $page
+];
+$current_query_string = http_build_query($query_params);
+
 $page_title = 'Data Pendaftar';
 $active_nav = 'pendaftar';
 require_once __DIR__ . '/../includes/header.php';
@@ -234,6 +242,7 @@ require_once __DIR__ . '/../includes/header.php';
                             <td class="text-center align-middle" style="width: 145px;">
                                 <form action="/pendaftar/update_status.php" method="POST" class="d-inline">
                                     <input type="hidden" name="id" value="<?= $p['id'] ?>">
+                                    <input type="hidden" name="return_qs" value="<?= htmlspecialchars($current_query_string) ?>">
                                     <select name="status" class="form-select form-select-sm fw-bold rounded-3 py-2 px-3 mx-auto text-center" style="max-width: 110px; font-size: 0.85rem; border: 2.5px solid #000 !important; box-shadow: 3px 3px 0px #000 !important; font-family: 'Inter', sans-serif;" onchange="this.form.submit()">
                                         <option value="pending" <?= $p['status_diterima'] === 'pending' ? 'selected' : '' ?>>Pending</option>
                                         <option value="diterima" <?= $p['status_diterima'] === 'diterima' ? 'selected' : '' ?>>Diterima</option>
@@ -250,6 +259,7 @@ require_once __DIR__ . '/../includes/header.php';
                                         </a>
                                         <form action="/pendaftar/update_status.php" method="POST" class="d-flex gap-1 w-100 align-items-center">
                                             <input type="hidden" name="id" value="<?= $p['id'] ?>">
+                                            <input type="hidden" name="return_qs" value="<?= htmlspecialchars($current_query_string) ?>">
                                             <input type="hidden" name="status" value="diterima">
                                             <select name="divisi" class="form-select form-select-sm rounded-3 fs-7 py-1 px-1 text-truncate flex-grow-1" style="width: 75%; font-size: 0.75rem; border: 2px solid #000 !important; box-shadow: 2px 2px 0px #000 !important;" required>
                                                 <option value="">-- Divisi --</option>
@@ -268,7 +278,7 @@ require_once __DIR__ . '/../includes/header.php';
                                         <a href="/pendaftar/detail.php?id=<?= $p['id'] ?>" class="btn btn-sm btn-outline-dark rounded py-1 px-2 w-100 fw-bold fs-7">
                                             DETAIL
                                         </a>
-                                        <a href="/pendaftar/hapus.php?id=<?= $p['id'] ?>" class="btn btn-sm btn-danger rounded py-1 px-2 text-white w-100 fw-bold fs-7" onclick="return confirm('Yakin ingin menghapus pendaftar ini?')">
+                                        <a href="/pendaftar/hapus.php?id=<?= $p['id'] ?>&return_qs=<?= urlencode($current_query_string) ?>" class="btn btn-sm btn-danger rounded py-1 px-2 text-white w-100 fw-bold fs-7" onclick="return confirm('Yakin ingin menghapus pendaftar ini?')">
                                             Hapus
                                         </a>
                                     </div>

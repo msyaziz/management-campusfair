@@ -11,6 +11,18 @@ $limit = 15;
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $offset = ($page - 1) * $limit;
 
+$search = trim($_GET['search'] ?? '');
+$where_clauses = ["1=1"];
+$params = [];
+
+if ($search !== '') {
+    $where_clauses[] = "(p.nama_lengkap LIKE :search1 OR p.asal_kampus_jurusan LIKE :search2 OR p.no_whatsapp LIKE :search3)";
+    $params['search1'] = "%$search%";
+    $params['search2'] = "%$search%";
+    $params['search3'] = "%$search%";
+}
+$where_search_sql = implode(' AND ', $where_clauses);
+
 if ($is_admin) {
     // Admin View: Get list of interviewers for dropdown assignment
     $stmtInterviewer = $pdo->query("SELECT id, nama, username FROM users WHERE role = 'pewawancara' ORDER BY nama ASC");
@@ -29,48 +41,66 @@ if ($is_admin) {
     $interviewer_stats = $stmtStats->fetchAll();
 
     // Count total applicants for pagination
-    $stmtCount = $pdo->query("SELECT COUNT(id) FROM pendaftar");
+    $count_sql = "SELECT COUNT(p.id) FROM pendaftar p WHERE $where_search_sql";
+    $stmtCount = $pdo->prepare($count_sql);
+    $stmtCount->execute($params);
     $total_rows = (int) $stmtCount->fetchColumn();
     $total_pages = max(1, ceil($total_rows / $limit));
 
     // Applicants with interview details (paginated)
-    $stmtApplicants = $pdo->prepare("
-        SELECT p.id, p.nama_lengkap, p.asal_kampus_jurusan, p.no_whatsapp, p.pilihan_1, p.pilihan_2,
+    $sql = "SELECT p.id, p.nama_lengkap, p.asal_kampus_jurusan, p.no_whatsapp, p.pilihan_1, p.pilihan_2,
                w.id as wawancara_id, w.pewawancara_id, w.status_wawancara, w.komentar, u.nama as nama_pewawancara
         FROM pendaftar p
         LEFT JOIN wawancara w ON p.id = w.pendaftar_id
         LEFT JOIN users u ON w.pewawancara_id = u.id
+        WHERE $where_search_sql
         ORDER BY p.created_at DESC
-        LIMIT :limit OFFSET :offset
-    ");
+        LIMIT :limit OFFSET :offset";
+    $stmtApplicants = $pdo->prepare($sql);
+    foreach ($params as $key => $val) {
+        $stmtApplicants->bindValue(":$key", $val);
+    }
     $stmtApplicants->bindValue(':limit', $limit, PDO::PARAM_INT);
     $stmtApplicants->bindValue(':offset', $offset, PDO::PARAM_INT);
     $stmtApplicants->execute();
     $applicants = $stmtApplicants->fetchAll();
 
 } else {
-    // Count total assigned for interviewer pagination
-    $stmtCount = $pdo->prepare("SELECT COUNT(p.id) FROM pendaftar p INNER JOIN wawancara w ON p.id = w.pendaftar_id WHERE w.pewawancara_id = :pewawancara_id");
-    $stmtCount->execute(['pewawancara_id' => $user['id']]);
+    // Interviewer View: Only get assigned applicants (paginated)
+    $where_clauses_int = $where_clauses;
+    $where_clauses_int[] = "w.pewawancara_id = :pewawancara_id";
+    $where_sql_int = implode(' AND ', $where_clauses_int);
+    $params_int = $params;
+    $params_int['pewawancara_id'] = $user['id'];
+
+    $count_sql = "SELECT COUNT(p.id) FROM pendaftar p INNER JOIN wawancara w ON p.id = w.pendaftar_id WHERE $where_sql_int";
+    $stmtCount = $pdo->prepare($count_sql);
+    $stmtCount->execute($params_int);
     $total_rows = (int) $stmtCount->fetchColumn();
     $total_pages = max(1, ceil($total_rows / $limit));
 
-    // Interviewer View: Only get assigned applicants (paginated)
-    $stmtApplicants = $pdo->prepare("
-        SELECT p.id, p.nama_lengkap, p.asal_kampus_jurusan, p.no_whatsapp, p.pilihan_1, p.pilihan_2, p.skor_komitmen, p.skor_prioritas, p.skor_keyakinan,
+    $sql = "SELECT p.id, p.nama_lengkap, p.asal_kampus_jurusan, p.no_whatsapp, p.pilihan_1, p.pilihan_2, p.skor_komitmen, p.skor_prioritas, p.skor_keyakinan,
                w.id as wawancara_id, w.pewawancara_id, w.status_wawancara, w.komentar, w.komentar_updated_at
         FROM pendaftar p
         INNER JOIN wawancara w ON p.id = w.pendaftar_id
-        WHERE w.pewawancara_id = :pewawancara_id
+        WHERE $where_sql_int
         ORDER BY w.status_wawancara ASC, p.created_at DESC
-        LIMIT :limit OFFSET :offset
-    ");
-    $stmtApplicants->bindValue(':pewawancara_id', $user['id'], PDO::PARAM_INT);
+        LIMIT :limit OFFSET :offset";
+    $stmtApplicants = $pdo->prepare($sql);
+    foreach ($params_int as $key => $val) {
+        $stmtApplicants->bindValue(":$key", $val);
+    }
     $stmtApplicants->bindValue(':limit', $limit, PDO::PARAM_INT);
     $stmtApplicants->bindValue(':offset', $offset, PDO::PARAM_INT);
     $stmtApplicants->execute();
     $applicants = $stmtApplicants->fetchAll();
 }
+
+$query_params = [
+    'search' => $search,
+    'page' => $page
+];
+$current_query_string = http_build_query($query_params);
 
 $page_title = 'Wawancara';
 $active_nav = 'wawancara';
@@ -85,6 +115,7 @@ require_once __DIR__ . '/../includes/header.php';
         </p>
     </div>
 </div>
+
 
 <?php if ($is_admin): ?>
     <!-- Admin Statistics Row -->
@@ -107,7 +138,24 @@ require_once __DIR__ . '/../includes/header.php';
             </div>
         <?php endforeach; ?>
     </div>
+<?php endif; ?>
 
+<!-- Filter Section -->
+<div class="mb-4 w-100">
+    <form method="GET" class="d-flex align-items-center w-100" id="searchForm">
+        <div class="input-group w-100" style="border: 2px solid #000; border-radius: 0.5rem; box-shadow: 3px 3px 0px #000; overflow: hidden; display: flex;">
+            <span class="input-group-text bg-white border-0" id="search-addon">
+                <i class="bi bi-search fw-bold text-dark"></i>
+            </span>
+            <input type="text" name="search" class="form-control border-0 fs-6 py-2" placeholder="Cari nama, kampus, WA..." value="<?= htmlspecialchars($search) ?>" aria-describedby="search-addon" style="box-shadow: none; outline: none; flex: 1;" onchange="document.getElementById('searchForm').submit()" onkeypress="if(event.key === 'Enter') document.getElementById('searchForm').submit();">
+            <?php if ($search): ?>
+                <a href="/wawancara/index.php" class="input-group-text bg-white border-0 text-dark px-3" style="text-decoration: none;" title="Reset"><i class="bi bi-x-lg fw-bold"></i></a>
+            <?php endif; ?>
+        </div>
+    </form>
+</div>
+
+<?php if ($is_admin): ?>
     <!-- Admin Assignment Table -->
     <div class="card card-custom overflow-hidden mb-4">
         <div class="table-responsive">
@@ -151,6 +199,7 @@ require_once __DIR__ . '/../includes/header.php';
                             <td>
                                 <form action="/wawancara/assign.php" method="POST" class="d-flex gap-2">
                                     <input type="hidden" name="pendaftar_id" value="<?= $a['id'] ?>">
+                                    <input type="hidden" name="return_qs" value="<?= htmlspecialchars($current_query_string) ?>">
                                     <select name="pewawancara_id" class="form-select form-select-sm rounded-3">
                                         <option value="">-- Pilih Pewawancara --</option>
                                         <?php foreach ($interviewers as $itv): ?>

@@ -17,5 +17,11 @@ if ($id > 0) {
     $stmt3->execute([$id]);
 }
 
-header("Location: /pendaftar/index.php?msg=deleted");
+$return_qs = $_GET['return_qs'] ?? '';
+
+if (!empty($return_qs)) {
+    header("Location: /pendaftar/index.php?msg=deleted&" . $return_qs);
+} else {
+    header("Location: /pendaftar/index.php?msg=deleted");
+}
 exit;
